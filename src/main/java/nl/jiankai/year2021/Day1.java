@@ -2007,14 +2007,14 @@ public class Day1 {
             "7759").split("\n")).map(Integer::parseInt).collect(Collectors.toList());
 
     public static void main(String[] args) {
-//        part1();
+        part1();
         part2();
     }
 
     static void part1() {
         int numberOfIncreases = 0;
         for (int i = 1; i < input.size(); i++) {
-            numberOfIncreases += input.get(i) - input.get(i - 1) > 0 ? 1 : 0;
+            numberOfIncreases += input.get(i) > input.get(i - 1) ? 1 : 0;
         }
 
         System.out.println(numberOfIncreases);
@@ -2023,7 +2023,7 @@ public class Day1 {
     static void part2(){
         int numberOfIncreases = 0;
         for (int i = 3; i < input.size(); i++) {
-            numberOfIncreases += input.get(i) - input.get(i - 3) > 0 ? 1 : 0;
+            numberOfIncreases += input.get(i) > input.get(i - 3) ? 1 : 0;
         }
 
         System.out.println(numberOfIncreases);
