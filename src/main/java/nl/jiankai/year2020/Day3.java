@@ -1,4 +1,4 @@
-package nl.jiankai;
+package nl.jiankai.year2020;
 
 public class Day3 {
     private static String s = ".##.....#....#....#..#.#...#.##\n" +

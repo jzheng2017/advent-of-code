@@ -1,4 +1,4 @@
-package nl.jiankai;
+package nl.jiankai.year2020;
 
 import java.util.ArrayList;
 import java.util.Arrays;

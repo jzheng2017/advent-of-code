@@ -1,4 +1,4 @@
-package nl.jiankai;
+package nl.jiankai.year2020;
 
 import java.util.*;
 
@@ -599,8 +599,6 @@ public class Day7 {
             "dim cyan bags contain 5 dim crimson bags, 2 clear brown bags, 1 muted brown bag, 4 light silver bags.").split("\n"));
 
     private static Map<String, List<Rule>> parsedRules;
-    private static List<String> alreadySearchedColor;
-
     public static void main(String[] args) {
         parsedRules = parse();
 
@@ -654,7 +652,6 @@ public class Day7 {
     }
 
     private static int traverseMapForMaxColors(String bagColor) {
-        alreadySearchedColor = new ArrayList<>();
         int maxColors = 0;
 
         for (Map.Entry<String, List<Rule>> rule : parsedRules.entrySet()) {
