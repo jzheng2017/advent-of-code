@@ -5,6 +5,63 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Day9 {
+    public static void main(String[] args) {
+        part1();
+    }
+
+    public static void part1() {
+        System.out.println(findLowestPoints().stream().map(v -> v + 1).mapToInt(v -> v).sum());
+    }
+
+    public static void part2() {
+
+    }
+
+    private static List<Integer> findLowestPoints() {
+        List<Integer> l = new ArrayList<>();
+        int[][] nums = new int[input.size()][input.get(0).length()];
+        for (int i = 0; i < input.size(); i++) {
+            for (int j = 0; j < input.get(i).length(); j++) {
+                nums[i][j] = Character.getNumericValue(input.get(i).charAt(j));
+            }
+        }
+
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = 0; j < nums[i].length; j++) {
+                boolean lowest = false;
+
+                if (i - 1 >= 0) {
+                    lowest = nums[i][j] < nums[i - 1][j];
+                    if (!lowest) {
+                        continue;
+                    }
+                }
+                if (i + 1 < nums.length) {
+                    lowest = nums[i][j] < nums[i + 1][j];
+                    if (!lowest) {
+                        continue;
+                    }
+                }
+                if (j - 1 >= 0) {
+                    lowest = nums[i][j] < nums[i][j - 1];
+                    if (!lowest) {
+                        continue;
+                    }
+                }
+                if (j + 1 < nums[i].length) {
+                    lowest = nums[i][j] < nums[i][j + 1];
+                    if (!lowest) {
+                        continue;
+                    }
+                }
+                if (lowest) {
+                    l.add(nums[i][j]);
+                }
+            }
+        }
+        return l;
+    }
+
     static List<String> input = Arrays.asList(("6546798789123567965567895323943212345892129763235999432345678976432345679987654524567998765325689236\n" +
             "5435799654012459943456789519894301234679098654569898921234589765321234589878543213567899886434990135\n" +
             "6656987643234767892345995439789213345899998765699787892345699876542367898765432101456789876556789296\n" +
@@ -105,61 +162,4 @@ public class Day9 {
             "9876435677998754567893469765879987653459896654398678965423599866476568964567979543456796543224978989\n" +
             "3987576798998765698912579876789598767598765431298789986210987654324467896789098756767897656102989491\n" +
             "2097687899329976789323489998896439889987654320129891397321298864212356789892198768878987643212495320").split("\n"));
-
-    public static void main(String[] args) {
-        part1();
-    }
-
-    public static void part1() {
-        System.out.println(findLowestPoints().stream().map(v -> v + 1).mapToInt(v -> v).sum());
-    }
-
-    public static void part2() {
-
-    }
-
-    private static List<Integer> findLowestPoints() {
-        List<Integer> l = new ArrayList<>();
-        int[][] nums = new int[input.size()][input.get(0).length()];
-        for (int i = 0; i < input.size(); i++) {
-            for (int j = 0; j < input.get(i).length(); j++) {
-                nums[i][j] = Character.getNumericValue(input.get(i).charAt(j));
-            }
-        }
-
-        for (int i = 0; i < nums.length; i++) {
-            for (int j = 0; j < nums[i].length; j++) {
-                boolean lowest = false;
-
-                if (i - 1 >= 0) {
-                    lowest = nums[i][j] < nums[i - 1][j];
-                    if (!lowest) {
-                        continue;
-                    }
-                }
-                if (i + 1 < nums.length) {
-                    lowest = nums[i][j] < nums[i + 1][j];
-                    if (!lowest) {
-                        continue;
-                    }
-                }
-                if (j - 1 >= 0) {
-                    lowest = nums[i][j] < nums[i][j - 1];
-                    if (!lowest) {
-                        continue;
-                    }
-                }
-                if (j + 1 < nums[i].length) {
-                    lowest = nums[i][j] < nums[i][j + 1];
-                    if (!lowest) {
-                        continue;
-                    }
-                }
-                if (lowest) {
-                    l.add(nums[i][j]);
-                }
-            }
-        }
-        return l;
-    }
 }

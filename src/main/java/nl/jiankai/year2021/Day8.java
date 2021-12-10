@@ -6,6 +6,112 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Day8 {
+    public static void main(String[] args) {
+//        part1();
+        part2();
+    }
+
+    static void part1() {
+        List<String> after = input.stream().map(s -> s.substring(s.indexOf("|") + 2)).collect(Collectors.toList());
+
+        System.out.println(after);
+
+        int count = 0;
+
+        for (String s : after) {
+            String[] words = s.split(" ");
+            for (String word : words) {
+                if (word.length() == 2 || word.length() == 4 || word.length() == 3 || word.length() == 7) {
+                    count++;
+                }
+            }
+        }
+
+        System.out.println(count);
+    }
+
+    static void part2() {
+        int sum = 0;
+        for (int i = 0; i < input.size(); i++) {
+            StringBuilder digits = new StringBuilder();
+            String[] line = input.get(i).split(" \\| ");
+            String[] words = line[0].split(" ");
+            String[] output = line[1].split(" ");
+
+            List<String> unknowns = new ArrayList<>();
+            String[] numbers = new String[10];
+
+            for (String word : words) {
+                char[] c = word.toCharArray();
+                Arrays.sort(c);
+                String w = new String(c);
+                if (word.length() == 2) {
+                    numbers[1] = w;
+                } else if (word.length() == 4) {
+                    numbers[4] = w;
+                } else if (word.length() == 3) {
+                    numbers[7] = w;
+                } else if (word.length() == 7) {
+                    numbers[8] = w;
+                } else {
+                    unknowns.add(w);
+                }
+            }
+
+            char[] t = numbers[1].toCharArray();
+
+            String nonMatchingOneAndFour = numbers[4];
+            for (char c : t) {
+                nonMatchingOneAndFour = nonMatchingOneAndFour.replace(Character.toString(c), "");
+            }
+            for (String unknown : unknowns) {
+                if (unknown.length() == 5) {
+                    if (containsAll(unknown, nonMatchingOneAndFour.toCharArray())) {
+                        numbers[5] = unknown;
+                    } else if (containsAll(unknown, numbers[1].toCharArray())) {
+                        numbers[3] = unknown;
+                    } else {
+                        numbers[2] = unknown;
+                    }
+                } else if (unknown.length() == 6) {
+                    if (containsAll(unknown, numbers[4].toCharArray())) {
+                        numbers[9] = unknown;
+                    } else if (containsAll(unknown, numbers[1].toCharArray())) {
+                        numbers[0] = unknown;
+                    } else {
+                        numbers[6] = unknown;
+                    }
+                }
+            }
+
+            for (String s : output) {
+                char[] c = s.toCharArray();
+                Arrays.sort(c);
+                String w = new String(c);
+
+                for (int j = 0; j < words.length; j++) {
+                    if (w.equals(numbers[j])) {
+                        digits.append(j);
+                    }
+                }
+            }
+            sum += Integer.parseInt(digits.toString());
+        }
+        System.out.println(sum);
+    }
+
+    private static boolean containsAll(String word, char[] keywords) {
+        boolean containsAll = true;
+        for (char keyword : keywords) {
+            if (word.indexOf(keyword) == -1) {
+                containsAll = false;
+                break;
+            }
+        }
+
+        return containsAll;
+    }
+
     static List<String> input = Arrays.asList(("bg gcdaeb aebg efabdcg abdce cafdbe fcbdeg bdacg gbd cafgd | daecb dcbae gb eabg\n" +
             "eabfdc fgd cegd aedgf fbacgd dceaf dg aebdcgf efbag edgfac | cgebadf dgce deafc acdbfg\n" +
             "dcgfb fe bcgefd adecfb fgdec dfe egadc fadgceb facbgd befg | fdacgb fbcdg dcefbg bcdfg\n" +
@@ -206,110 +312,4 @@ public class Day8 {
             "ebgafc ecg agfcd ecab dbfgea eagcbfd edcbgf bgaef ce acegf | egbfa bcgfaed abec ce\n" +
             "acdfbg afgdb ea bea ebgda agecfbd bcgde cfgeab aefd defgba | agbed ae fgbaed defa\n" +
             "gcebadf ed bafce bgcfad daefb bfadg aefbgd fgcdeb daeg ebd | cdgfba ecbfdg edbaf gade").split("\n"));
-
-    public static void main(String[] args) {
-//        part1();
-        part2();
-    }
-
-    static void part1() {
-        List<String> after = input.stream().map(s -> s.substring(s.indexOf("|") + 2)).collect(Collectors.toList());
-
-        System.out.println(after);
-
-        int count = 0;
-
-        for (String s : after) {
-            String[] words = s.split(" ");
-            for (String word : words) {
-                if (word.length() == 2 || word.length() == 4 || word.length() == 3 || word.length() == 7) {
-                    count++;
-                }
-            }
-        }
-
-        System.out.println(count);
-    }
-
-    static void part2() {
-        int sum = 0;
-        for (int i = 0; i < input.size(); i++) {
-            StringBuilder digits = new StringBuilder();
-            String[] line = input.get(i).split(" \\| ");
-            String[] words = line[0].split(" ");
-            String[] output = line[1].split(" ");
-
-            List<String> unknowns = new ArrayList<>();
-            String[] numbers = new String[10];
-
-            for (String word : words) {
-                char[] c = word.toCharArray();
-                Arrays.sort(c);
-                String w = new String(c);
-                if (word.length() == 2) {
-                    numbers[1] = w;
-                } else if (word.length() == 4) {
-                    numbers[4] = w;
-                } else if (word.length() == 3) {
-                    numbers[7] = w;
-                } else if (word.length() == 7) {
-                    numbers[8] = w;
-                } else {
-                    unknowns.add(w);
-                }
-            }
-
-            char[] t = numbers[1].toCharArray();
-
-            String nonMatchingOneAndFour = numbers[4];
-            for (char c : t) {
-                nonMatchingOneAndFour = nonMatchingOneAndFour.replace(Character.toString(c), "");
-            }
-            for (String unknown : unknowns) {
-                if (unknown.length() == 5) {
-                    if (containsAll(unknown, nonMatchingOneAndFour.toCharArray())) {
-                        numbers[5] = unknown;
-                    } else if (containsAll(unknown, numbers[1].toCharArray())) {
-                        numbers[3] = unknown;
-                    } else {
-                        numbers[2] = unknown;
-                    }
-                } else if (unknown.length() == 6) {
-                    if (containsAll(unknown, numbers[4].toCharArray())) {
-                        numbers[9] = unknown;
-                    } else if (containsAll(unknown, numbers[1].toCharArray())) {
-                        numbers[0] = unknown;
-                    } else {
-                        numbers[6] = unknown;
-                    }
-                }
-            }
-
-            for (String s : output) {
-                char[] c = s.toCharArray();
-                Arrays.sort(c);
-                String w = new String(c);
-
-                for (int j = 0; j < words.length; j++) {
-                    if (w.equals(numbers[j])) {
-                        digits.append(j);
-                    }
-                }
-            }
-            sum += Integer.parseInt(digits.toString());
-        }
-        System.out.println(sum);
-    }
-
-    private static boolean containsAll(String word, char[] keywords) {
-        boolean containsAll = true;
-        for (char keyword : keywords) {
-            if (word.indexOf(keyword) == -1) {
-                containsAll = false;
-                break;
-            }
-        }
-
-        return containsAll;
-    }
 }

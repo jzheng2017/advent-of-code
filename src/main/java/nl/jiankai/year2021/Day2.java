@@ -5,6 +5,52 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Day2 {
+    public static void main(String[] args) {
+        part1();
+        part2();
+    }
+
+    static void part1() {
+        int x = 0;
+        int y = 0;
+
+        for (String s : input) {
+            String[] splitString = s.split(" ");
+            String command = splitString[0];
+            int number = Integer.parseInt(splitString[1]);
+
+            switch (command) {
+                case "forward" -> x += number;
+                case "down" -> y += number;
+                case "up" -> y -= number;
+            }
+        }
+
+        System.out.println(x * y);
+    }
+
+    static void part2() {
+        int x = 0;
+        int y = 0;
+        int aim = 0;
+        for (String s : input) {
+            String[] splitString = s.split(" ");
+            String command = splitString[0];
+            int number = Integer.parseInt(splitString[1]);
+
+            switch (command) {
+                case "forward" -> {
+                    x += number;
+                    y += aim * number;
+                }
+                case "down" -> aim += number;
+                case "up" -> aim -= number;
+            }
+        }
+
+        System.out.println(x * y);
+    }
+
     static List<String> input = Arrays.stream(("forward 2\n" +
             "down 8\n" +
             "down 1\n" +
@@ -1005,50 +1051,4 @@ public class Day2 {
             "up 1\n" +
             "forward 3\n" +
             "forward 2").split("\n")).collect(Collectors.toList());
-
-    public static void main(String[] args) {
-        part1();
-        part2();
-    }
-
-    static void part1() {
-        int x = 0;
-        int y = 0;
-
-        for (String s : input) {
-            String[] splitString = s.split(" ");
-            String command = splitString[0];
-            int number = Integer.parseInt(splitString[1]);
-
-            switch (command) {
-                case "forward" -> x += number;
-                case "down" -> y += number;
-                case "up" -> y -= number;
-            }
-        }
-
-        System.out.println(x * y);
-    }
-
-    static void part2() {
-        int x = 0;
-        int y = 0;
-        int aim = 0;
-        for (String s : input) {
-            String[] splitString = s.split(" ");
-            String command = splitString[0];
-            int number = Integer.parseInt(splitString[1]);
-
-            switch (command) {
-                case "forward" -> {
-                    x += number;
-                    y += aim * number;
-                }
-                case "down" -> aim += number;
-                case "up" -> aim -= number;
-            }
-        }
-
-        System.out.println(x * y);
-    }
 }

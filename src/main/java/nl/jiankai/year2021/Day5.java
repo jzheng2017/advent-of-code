@@ -5,6 +5,113 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Day5 {
+    static int[][] test = new int[1000][1000];
+    public static void main(String[] args) {
+        part1();
+        part2();
+    }
+
+    private static void part1() {
+        int overlapping = 0;
+
+        for (String line : input) {
+            String[] points = line.split(" -> ");
+            String[] point1 = points[0].split(",");
+            String[] point2 = points[1].split(",");
+            int x1 = Integer.parseInt(point1[0]);
+            int y1 = Integer.parseInt(point1[1]);
+            int x2 = Integer.parseInt(point2[0]);
+            int y2 = Integer.parseInt(point2[1]);
+
+            doHorizontalOrVertical(x1, y1, x2, y2);
+        }
+        for (int i = 0; i < test.length; i++) {
+            for (int j = 0; j < test[i].length; j++) {
+                if (test[i][j] >= 2) {
+                    overlapping++;
+                }
+            }
+        }
+
+        System.out.println(overlapping);
+    }
+
+    static void part2() {
+        int overlapping = 0;
+
+        for (String line : input) {
+            String[] points = line.split(" -> ");
+            String[] point1 = points[0].split(",");
+            String[] point2 = points[1].split(",");
+            int x1 = Integer.parseInt(point1[0]);
+            int y1 = Integer.parseInt(point1[1]);
+            int x2 = Integer.parseInt(point2[0]);
+            int y2 = Integer.parseInt(point2[1]);
+
+            boolean isDiagonalLine = Math.abs(x1 - x2) > 0 && Math.abs(y1 - y2) > 0;
+
+
+            if (isDiagonalLine) {
+                doDiagonal(x1, y1, x2, y2);
+            } else {
+                doHorizontalOrVertical(x1, y1, x2, y2);
+            }
+        }
+        for (int i = 0; i < test.length; i++) {
+            for (int j = 0; j < test[i].length; j++) {
+                if (test[i][j] >= 2) {
+                    overlapping++;
+                }
+            }
+        }
+
+        System.out.println(overlapping);
+    }
+
+    private static void doDiagonal(int x1, int y1, int x2, int y2) {
+        while (x1 != x2 || y1 != y2) {
+            test[x1][y1]++;
+            if (x1 < x2) {
+                x1++;
+            } else if (x1 > x2){
+                x1--;
+            }
+
+            if (y1 < y2) {
+                y1++;
+            } else if (y1 > y2) {
+                y1--;
+            }
+            if (x1 == x2 && y1 == y2) {
+                test[x1][y1]++;
+            }
+        }
+    }
+
+    private static void doHorizontalOrVertical(int x1, int y1, int x2, int y2) {
+        if (x1 == x2) {
+            if (y1 < y2) {
+                for (int i = y1; i <= y2; i++) {
+                    test[x1][i]++;
+                }
+            } else {
+                for (int i = y2; i <= y1; i++) {
+                    test[x1][i]++;
+                }
+            }
+        } else if (y1 == y2) {
+            if (x1 < x2) {
+                for (int i = x1; i <= x2; i++) {
+                    test[i][y1]++;
+                }
+            } else {
+                for (int i = x2; i <= x1; i++) {
+                    test[i][y1]++;
+                }
+            }
+        }
+    }
+
     static List<String> input = Arrays.stream(("682,519 -> 682,729\n" +
             "852,131 -> 25,958\n" +
             "303,481 -> 206,481\n" +
@@ -505,111 +612,4 @@ public class Day5 {
             "552,32 -> 352,32\n" +
             "21,637 -> 21,781\n" +
             "945,847 -> 945,303").split("\n")).collect(Collectors.toList());
-    static int[][] test = new int[1000][1000];
-
-    public static void main(String[] args) {
-        part1();
-        part2();
-    }
-
-    private static void part1() {
-        int overlapping = 0;
-
-        for (String line : input) {
-            String[] points = line.split(" -> ");
-            String[] point1 = points[0].split(",");
-            String[] point2 = points[1].split(",");
-            int x1 = Integer.parseInt(point1[0]);
-            int y1 = Integer.parseInt(point1[1]);
-            int x2 = Integer.parseInt(point2[0]);
-            int y2 = Integer.parseInt(point2[1]);
-
-            doHorizontalOrVertical(x1, y1, x2, y2);
-        }
-        for (int i = 0; i < test.length; i++) {
-            for (int j = 0; j < test[i].length; j++) {
-                if (test[i][j] >= 2) {
-                    overlapping++;
-                }
-            }
-        }
-
-        System.out.println(overlapping);
-    }
-
-    static void part2() {
-        int overlapping = 0;
-
-        for (String line : input) {
-            String[] points = line.split(" -> ");
-            String[] point1 = points[0].split(",");
-            String[] point2 = points[1].split(",");
-            int x1 = Integer.parseInt(point1[0]);
-            int y1 = Integer.parseInt(point1[1]);
-            int x2 = Integer.parseInt(point2[0]);
-            int y2 = Integer.parseInt(point2[1]);
-
-            boolean isDiagonalLine = Math.abs(x1 - x2) > 0 && Math.abs(y1 - y2) > 0;
-
-
-            if (isDiagonalLine) {
-                doDiagonal(x1, y1, x2, y2);
-            } else {
-                doHorizontalOrVertical(x1, y1, x2, y2);
-            }
-        }
-        for (int i = 0; i < test.length; i++) {
-            for (int j = 0; j < test[i].length; j++) {
-                if (test[i][j] >= 2) {
-                    overlapping++;
-                }
-            }
-        }
-
-        System.out.println(overlapping);
-    }
-
-    private static void doDiagonal(int x1, int y1, int x2, int y2) {
-        while (x1 != x2 || y1 != y2) {
-            test[x1][y1]++;
-            if (x1 < x2) {
-                x1++;
-            } else if (x1 > x2){
-                x1--;
-            }
-
-            if (y1 < y2) {
-                y1++;
-            } else if (y1 > y2) {
-                y1--;
-            }
-            if (x1 == x2 && y1 == y2) {
-                test[x1][y1]++;
-            }
-        }
-    }
-
-    private static void doHorizontalOrVertical(int x1, int y1, int x2, int y2) {
-        if (x1 == x2) {
-            if (y1 < y2) {
-                for (int i = y1; i <= y2; i++) {
-                    test[x1][i]++;
-                }
-            } else {
-                for (int i = y2; i <= y1; i++) {
-                    test[x1][i]++;
-                }
-            }
-        } else if (y1 == y2) {
-            if (x1 < x2) {
-                for (int i = x1; i <= x2; i++) {
-                    test[i][y1]++;
-                }
-            } else {
-                for (int i = x2; i <= x1; i++) {
-                    test[i][y1]++;
-                }
-            }
-        }
-    }
 }

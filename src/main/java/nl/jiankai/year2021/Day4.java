@@ -8,6 +8,178 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Day4 {
+    static List<Integer> bingoNumbers = new ArrayList<>();
+    static List<Bingo> bingoList = new ArrayList<>();
+    static List<Bingo> part2BingoList = new ArrayList<>();
+    public static void main(String[] args) {
+        parseInputAndGenerateBingoCards();
+        part1();
+        part2();
+    }
+
+    private static void part1() {
+        for (int number : bingoNumbers) {
+            for (Bingo bingo : bingoList) {
+                bingo.markNumber(number);
+                if (bingo.hasBingo()) {
+                    System.out.println(bingo.getSumOfUnmarkedNumbers() * number);
+                    return;
+                }
+            }
+        }
+    }
+
+    private static void part2() {
+        part2BingoList = new ArrayList<>(bingoList);
+        for (int number : bingoNumbers) {
+            for (Bingo bingo : bingoList) {
+                bingo.markNumber(number);
+
+                if (part2BingoList.size() == 1 && part2BingoList.get(0).hasBingo()) {
+                    System.out.println(part2BingoList.get(0).getSumOfUnmarkedNumbers() * number);
+                    return;
+                } else if (bingo.hasBingo()) {
+                    part2BingoList.remove(bingo);
+                }
+            }
+        }
+    }
+
+    private static void parseInputAndGenerateBingoCards() {
+        String s = input.get(0);
+        String[] numbers = s.split(",");
+
+        for (String b : numbers) {
+            bingoNumbers.add(Integer.parseInt(b));
+        }
+
+        input.remove(0);
+        input = input.stream().filter(line -> line.length() > 0).collect(Collectors.toList());
+        Bingo.BingoNumber[][] bingoGrid = new Bingo.BingoNumber[5][5];
+        int y = 0;
+        int x = 0;
+        for (int i = 0; i < input.size(); i++) {
+            if (i != 0 && i % 5 == 0) {
+                bingoList.add(new Bingo(bingoGrid));
+                y = 0;
+                bingoGrid = new Bingo.BingoNumber[5][5];
+            }
+
+            String line = input.get(i);
+            String[] nums = line.split(" ");
+            x = 0;
+            for (String num : nums) {
+                if (num.length() == 0) {
+                    continue;
+                }
+                bingoGrid[y][x] = new Bingo.BingoNumber(Integer.parseInt(num));
+                x++;
+            }
+            y++;
+
+            if (i == input.size() - 1) {
+                bingoList.add(new Bingo(bingoGrid));
+            }
+        }
+    }
+
+    public static class Bingo {
+
+        private final Map<Integer, BingoNumber> bingoNumbers = new HashMap<>();
+        private final BingoNumber[][] bingoGrid;
+        public Bingo(BingoNumber[][] bingoGrid) {
+            this.bingoGrid = bingoGrid;
+            fillBingoNumbers();
+        }
+
+        public void markNumber(int number) {
+            BingoNumber bingoNumber = bingoNumbers.get(number);
+
+            if (bingoNumber != null) {
+                bingoNumber.marked = true;
+            }
+        }
+
+        public int getSumOfUnmarkedNumbers() {
+            int sum = 0;
+
+            for (BingoNumber[] bingoLine : bingoGrid) {
+                for (BingoNumber bingoNumber : bingoLine) {
+                    if (!bingoNumber.marked) {
+                        sum += bingoNumber.number;
+                    }
+                }
+            }
+
+            return sum;
+        }
+
+        public boolean hasBingo() {
+            int x = 0;
+            int y = 0;
+
+            while (x != 5 && y != 5) {
+                if (bingoGrid[y][x].marked) {
+                    boolean hasBingo = checkBingoVerticalAndHorizontal(x, y);
+
+                    if (hasBingo) {
+                        return true;
+                    }
+                }
+                x++;
+                y++;
+            }
+
+            return false;
+        }
+
+        private void fillBingoNumbers() {
+            for (BingoNumber[] numbers : bingoGrid) {
+                for (BingoNumber number : numbers) {
+                    bingoNumbers.put(number.number, number);
+                }
+            }
+        }
+
+        private boolean checkBingoVerticalAndHorizontal(int x, int y) {
+            boolean hasBingo = true;
+
+            //check horizontal
+            for (int i = 0; i < bingoGrid.length; i++) {
+                if (!bingoGrid[y][i].marked) {
+                    hasBingo = false;
+                    break;
+                }
+            }
+
+            if (hasBingo) {
+                return true;
+            }
+
+            hasBingo = true;
+
+            //check vertical
+            for (BingoNumber[] numbers : bingoGrid) {
+                if (!numbers[x].marked) {
+                    hasBingo = false;
+                    break;
+                }
+            }
+
+            return hasBingo;
+        }
+
+        private static class BingoNumber {
+
+            private final int number;
+            private boolean marked;
+            public BingoNumber(int number) {
+                this.number = number;
+                this.marked = false;
+            }
+
+        }
+    }
     static List<String> input = Arrays.stream(("17,2,33,86,38,41,4,34,91,61,11,81,3,59,29,71,26,44,54,89,46,9,85,62,23,76,45,24,78,14,58,48,57,40,21,49,7,99,8,56,50,19,53,55,10,94,75,68,6,83,84,88,52,80,73,74,79,36,70,28,37,0,42,98,96,92,27,90,47,20,5,77,69,93,31,30,95,25,63,65,51,72,60,16,12,64,18,13,1,35,15,66,67,43,22,87,97,32,39,82\n" +
             "\n" +
             "10 27 53 91 86\n" +
@@ -609,176 +781,4 @@ public class Day4 {
             " 2 64 31 41 86\n" +
             "94 45 76 70  3\n" +
             "39 89 66  4 24").split("\n")).collect(Collectors.toList());
-    static List<Integer> bingoNumbers = new ArrayList<>();
-    static List<Bingo> bingoList = new ArrayList<>();
-    static List<Bingo> part2BingoList = new ArrayList<>();
-
-    public static void main(String[] args) {
-        parseInputAndGenerateBingoCards();
-        part1();
-        part2();
-    }
-
-    private static void part1() {
-        for (int number : bingoNumbers) {
-            for (Bingo bingo : bingoList) {
-                bingo.markNumber(number);
-                if (bingo.hasBingo()) {
-                    System.out.println(bingo.getSumOfUnmarkedNumbers() * number);
-                    return;
-                }
-            }
-        }
-    }
-
-    private static void part2() {
-        part2BingoList = new ArrayList<>(bingoList);
-        for (int number : bingoNumbers) {
-            for (Bingo bingo : bingoList) {
-                bingo.markNumber(number);
-
-                if (part2BingoList.size() == 1 && part2BingoList.get(0).hasBingo()) {
-                    System.out.println(part2BingoList.get(0).getSumOfUnmarkedNumbers() * number);
-                    return;
-                } else if (bingo.hasBingo()) {
-                    part2BingoList.remove(bingo);
-                }
-            }
-        }
-    }
-
-    private static void parseInputAndGenerateBingoCards() {
-        String s = input.get(0);
-        String[] numbers = s.split(",");
-
-        for (String b : numbers) {
-            bingoNumbers.add(Integer.parseInt(b));
-        }
-
-        input.remove(0);
-        input = input.stream().filter(line -> line.length() > 0).collect(Collectors.toList());
-        Bingo.BingoNumber[][] bingoGrid = new Bingo.BingoNumber[5][5];
-        int y = 0;
-        int x = 0;
-        for (int i = 0; i < input.size(); i++) {
-            if (i != 0 && i % 5 == 0) {
-                bingoList.add(new Bingo(bingoGrid));
-                y = 0;
-                bingoGrid = new Bingo.BingoNumber[5][5];
-            }
-
-            String line = input.get(i);
-            String[] nums = line.split(" ");
-            x = 0;
-            for (String num : nums) {
-                if (num.length() == 0) {
-                    continue;
-                }
-                bingoGrid[y][x] = new Bingo.BingoNumber(Integer.parseInt(num));
-                x++;
-            }
-            y++;
-
-            if (i == input.size() - 1) {
-                bingoList.add(new Bingo(bingoGrid));
-            }
-        }
-    }
-
-    public static class Bingo {
-        private final Map<Integer, BingoNumber> bingoNumbers = new HashMap<>();
-        private final BingoNumber[][] bingoGrid;
-
-        public Bingo(BingoNumber[][] bingoGrid) {
-            this.bingoGrid = bingoGrid;
-            fillBingoNumbers();
-        }
-
-        public void markNumber(int number) {
-            BingoNumber bingoNumber = bingoNumbers.get(number);
-
-            if (bingoNumber != null) {
-                bingoNumber.marked = true;
-            }
-        }
-
-        public int getSumOfUnmarkedNumbers() {
-            int sum = 0;
-
-            for (BingoNumber[] bingoLine : bingoGrid) {
-                for (BingoNumber bingoNumber : bingoLine) {
-                    if (!bingoNumber.marked) {
-                        sum += bingoNumber.number;
-                    }
-                }
-            }
-
-            return sum;
-        }
-
-        public boolean hasBingo() {
-            int x = 0;
-            int y = 0;
-
-            while (x != 5 && y != 5) {
-                if (bingoGrid[y][x].marked) {
-                    boolean hasBingo = checkBingoVerticalAndHorizontal(x, y);
-
-                    if (hasBingo) {
-                        return true;
-                    }
-                }
-                x++;
-                y++;
-            }
-
-            return false;
-        }
-
-        private void fillBingoNumbers() {
-            for (BingoNumber[] numbers : bingoGrid) {
-                for (BingoNumber number : numbers) {
-                    bingoNumbers.put(number.number, number);
-                }
-            }
-        }
-
-        private boolean checkBingoVerticalAndHorizontal(int x, int y) {
-            boolean hasBingo = true;
-
-            //check horizontal
-            for (int i = 0; i < bingoGrid.length; i++) {
-                if (!bingoGrid[y][i].marked) {
-                    hasBingo = false;
-                    break;
-                }
-            }
-
-            if (hasBingo) {
-                return true;
-            }
-
-            hasBingo = true;
-
-            //check vertical
-            for (BingoNumber[] numbers : bingoGrid) {
-                if (!numbers[x].marked) {
-                    hasBingo = false;
-                    break;
-                }
-            }
-
-            return hasBingo;
-        }
-
-        private static class BingoNumber {
-            private final int number;
-            private boolean marked;
-
-            public BingoNumber(int number) {
-                this.number = number;
-                this.marked = false;
-            }
-        }
-    }
 }

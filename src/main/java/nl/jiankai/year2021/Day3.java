@@ -6,6 +6,94 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Day3 {
+    public static void main(String[] args) {
+        part1();
+        part2();
+    }
+
+    static void part1() {
+        StringBuilder gamma = new StringBuilder();
+        StringBuilder epsilon = new StringBuilder();
+        int[] sum = new int[input.get(0).length()];
+
+        for (String s : input) {
+            for (int j = 0; j < s.length(); j++) {
+                if (s.charAt(j) == '1') {
+                    sum[j]++;
+                }
+            }
+        }
+
+        for (int i = 0; i < sum.length; i++) {
+            if (1.0 * sum[i] / input.size() >= 0.5) {
+                gamma.append("1");
+                epsilon.append("0");
+            } else {
+                gamma.append("0");
+                epsilon.append("1");
+            }
+        }
+
+        System.out.println(Integer.parseInt(gamma.toString(), 2) * Integer.parseInt(epsilon.toString(), 2));
+    }
+
+    static void part2() {
+        String oxygenRating;
+        String co2Rating;
+
+        int length = input.get(0).length();
+        List<String> intermediateBits = new ArrayList<>(input);
+        for (int i = 0; i < length; i++) {
+            if (intermediateBits.size() == 1) break;
+            int finalI = i;
+            if (getMostCommonBit(intermediateBits, i)) {
+                intermediateBits = intermediateBits.stream().filter(s -> s.charAt(finalI) == '1').collect(Collectors.toList());
+            } else {
+                intermediateBits = intermediateBits.stream().filter(s -> s.charAt(finalI) == '0').collect(Collectors.toList());
+            }
+        }
+
+        oxygenRating = intermediateBits.get(0);
+        intermediateBits = new ArrayList<>(input);
+        for (int i = 0; i < length; i++) {
+            if (intermediateBits.size() == 1) break;
+            int finalI = i;
+            if (getLeastCommonBit(intermediateBits, i)) {
+                intermediateBits = intermediateBits.stream().filter(s -> s.charAt(finalI) == '1').collect(Collectors.toList());
+            } else {
+                intermediateBits = intermediateBits.stream().filter(s -> s.charAt(finalI) == '0').collect(Collectors.toList());
+            }
+        }
+        co2Rating = intermediateBits.get(0);
+
+        System.out.println(Integer.parseInt(oxygenRating, 2) * Integer.parseInt(co2Rating, 2));
+
+    }
+
+    static boolean getMostCommonBit(List<String> l, int index) {
+        int sum = 0;
+
+        for (String s : l) {
+            if (s.charAt(index) == '1') {
+                sum++;
+            }
+        }
+
+        return 1.0 * sum / l.size() >= 0.5;
+    }
+
+    static boolean getLeastCommonBit(List<String> l, int index) {
+        int sum = 0;
+
+        for (String s : l) {
+            if (s.charAt(index) == '1') {
+                sum++;
+            }
+        }
+
+        return !(1.0 * sum / l.size() >= 0.5);
+    }
+
     static List<String> input = Arrays.stream(("000100011010\n" +
             "110011110110\n" +
             "011000101111\n" +
@@ -1006,92 +1094,4 @@ public class Day3 {
             "111001100001\n" +
             "111101011101\n" +
             "001100111110").split("\n")).collect(Collectors.toList());
-
-    public static void main(String[] args) {
-        part1();
-        part2();
-    }
-
-    static void part1() {
-        StringBuilder gamma = new StringBuilder();
-        StringBuilder epsilon = new StringBuilder();
-        int[] sum = new int[input.get(0).length()];
-
-        for (String s : input) {
-            for (int j = 0; j < s.length(); j++) {
-                if (s.charAt(j) == '1') {
-                    sum[j]++;
-                }
-            }
-        }
-
-        for (int i = 0; i < sum.length; i++) {
-            if (1.0 * sum[i] / input.size() >= 0.5) {
-                gamma.append("1");
-                epsilon.append("0");
-            } else {
-                gamma.append("0");
-                epsilon.append("1");
-            }
-        }
-
-        System.out.println(Integer.parseInt(gamma.toString(), 2) * Integer.parseInt(epsilon.toString(), 2));
-    }
-
-    static void part2() {
-        String oxygenRating;
-        String co2Rating;
-
-        int length = input.get(0).length();
-        List<String> intermediateBits = new ArrayList<>(input);
-        for (int i = 0; i < length; i++) {
-            if (intermediateBits.size() == 1) break;
-            int finalI = i;
-            if (getMostCommonBit(intermediateBits, i)) {
-                intermediateBits = intermediateBits.stream().filter(s -> s.charAt(finalI) == '1').collect(Collectors.toList());
-            } else {
-                intermediateBits = intermediateBits.stream().filter(s -> s.charAt(finalI) == '0').collect(Collectors.toList());
-            }
-        }
-
-        oxygenRating = intermediateBits.get(0);
-        intermediateBits = new ArrayList<>(input);
-        for (int i = 0; i < length; i++) {
-            if (intermediateBits.size() == 1) break;
-            int finalI = i;
-            if (getLeastCommonBit(intermediateBits, i)) {
-                intermediateBits = intermediateBits.stream().filter(s -> s.charAt(finalI) == '1').collect(Collectors.toList());
-            } else {
-                intermediateBits = intermediateBits.stream().filter(s -> s.charAt(finalI) == '0').collect(Collectors.toList());
-            }
-        }
-        co2Rating = intermediateBits.get(0);
-
-        System.out.println(Integer.parseInt(oxygenRating, 2) * Integer.parseInt(co2Rating, 2));
-
-    }
-
-    static boolean getMostCommonBit(List<String> l, int index) {
-        int sum = 0;
-
-        for (String s : l) {
-            if (s.charAt(index) == '1') {
-                sum++;
-            }
-        }
-
-        return 1.0 * sum / l.size() >= 0.5;
-    }
-
-    static boolean getLeastCommonBit(List<String> l, int index) {
-        int sum = 0;
-
-        for (String s : l) {
-            if (s.charAt(index) == '1') {
-                sum++;
-            }
-        }
-
-        return !(1.0 * sum / l.size() >= 0.5);
-    }
 }

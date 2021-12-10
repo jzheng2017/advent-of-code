@@ -5,6 +5,29 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Day1 {
+    public static void main(String[] args) {
+        part1();
+        part2();
+    }
+
+    static void part1() {
+        int numberOfIncreases = 0;
+        for (int i = 1; i < input.size(); i++) {
+            numberOfIncreases += input.get(i) > input.get(i - 1) ? 1 : 0;
+        }
+
+        System.out.println(numberOfIncreases);
+    }
+
+    static void part2(){
+        int numberOfIncreases = 0;
+        for (int i = 3; i < input.size(); i++) {
+            numberOfIncreases += input.get(i) > input.get(i - 3) ? 1 : 0;
+        }
+
+        System.out.println(numberOfIncreases);
+    }
+
     static List<Integer> input = Arrays.stream(("104\n" +
             "105\n" +
             "109\n" +
@@ -2005,27 +2028,4 @@ public class Day1 {
             "7737\n" +
             "7746\n" +
             "7759").split("\n")).map(Integer::parseInt).collect(Collectors.toList());
-
-    public static void main(String[] args) {
-        part1();
-        part2();
-    }
-
-    static void part1() {
-        int numberOfIncreases = 0;
-        for (int i = 1; i < input.size(); i++) {
-            numberOfIncreases += input.get(i) > input.get(i - 1) ? 1 : 0;
-        }
-
-        System.out.println(numberOfIncreases);
-    }
-
-    static void part2(){
-        int numberOfIncreases = 0;
-        for (int i = 3; i < input.size(); i++) {
-            numberOfIncreases += input.get(i) > input.get(i - 3) ? 1 : 0;
-        }
-
-        System.out.println(numberOfIncreases);
-    }
 }
