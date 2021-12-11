@@ -1,12 +1,15 @@
 package nl.jiankai.year2021;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.awt.*;
+import java.util.*;
 import java.util.List;
 
 public class Day9 {
+    static List<Point> points = new ArrayList<>();
+
     public static void main(String[] args) {
-        part1();
+//        part1();
+        part2();
     }
 
     public static void part1() {
@@ -14,12 +17,47 @@ public class Day9 {
     }
 
     public static void part2() {
+        findLowestPoints();
+        List<Integer> sizes = new ArrayList<>();
+        for (Point point : points) {
+            sizes.add(calculateBasinSize(point.x, point.y).size());
+        }
+        Collections.sort(sizes);
+        int size = sizes.size() - 1;
+        System.out.println(sizes.get(size - 2) * sizes.get(size - 1) * sizes.get(size));
+    }
 
+    private static Set<Point> calculateBasinSize(int x, int y) {
+        Set<Point> local = new HashSet<>();
+        if (nums[x][y] == 9) {
+            return local;
+        }
+        final Point currentPoint = new Point(x, y);
+        if (!alreadyFoundPointsForBasin.contains(currentPoint)) {
+            local.add(currentPoint);
+            alreadyFoundPointsForBasin.add(currentPoint);
+        } else {
+            return local;
+        }
+
+        if (x + 1 < nums.length && nums[x][y] < nums[x + 1][y]) {
+            local.addAll(calculateBasinSize(x + 1, y));
+        }
+        if (x >= 1 && nums[x][y] < nums[x - 1][y]) {
+            local.addAll(calculateBasinSize(x - 1, y));
+        }
+        if (y + 1 < nums[x].length && nums[x][y] < nums[x][y + 1]) {
+            local.addAll(calculateBasinSize(x, y + 1));
+        }
+        if (y >= 1 && nums[x][y] < nums[x][y - 1]) {
+            local.addAll(calculateBasinSize(x, y - 1));
+        }
+
+        return local;
     }
 
     private static List<Integer> findLowestPoints() {
         List<Integer> l = new ArrayList<>();
-        int[][] nums = new int[input.size()][input.get(0).length()];
         for (int i = 0; i < input.size(); i++) {
             for (int j = 0; j < input.get(i).length(); j++) {
                 nums[i][j] = Character.getNumericValue(input.get(i).charAt(j));
@@ -56,6 +94,7 @@ public class Day9 {
                 }
                 if (lowest) {
                     l.add(nums[i][j]);
+                    points.add(new Point(i, j));
                 }
             }
         }
@@ -162,4 +201,6 @@ public class Day9 {
             "9876435677998754567893469765879987653459896654398678965423599866476568964567979543456796543224978989\n" +
             "3987576798998765698912579876789598767598765431298789986210987654324467896789098756767897656102989491\n" +
             "2097687899329976789323489998896439889987654320129891397321298864212356789892198768878987643212495320").split("\n"));
+    static int[][] nums = new int[input.size()][input.get(0).length()];
+    static Set<Point> alreadyFoundPointsForBasin = new HashSet<>();
 }
