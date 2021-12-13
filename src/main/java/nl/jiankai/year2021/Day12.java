@@ -1,22 +1,31 @@
 package nl.jiankai.year2021;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class Day12 {
     static Map<String, Node> nodes = new HashMap<>();
-    static int uniquePaths = 0;
     static List<String> paths = new ArrayList<>();
 
     public static void main(String[] args) {
         createGraph();
-        part1(nodes.get("start"), nodes.get("end"), new ArrayList<>());
-        part2(nodes.get("start"), nodes.get("end"), new ArrayList<>());
-        System.out.println(uniquePaths);
+//        part1(nodes.get("start"), nodes.get("end"), new ArrayList<>());
+//        List<String> p1 = new ArrayList<>(paths);
+//        paths.clear();
+        part2(nodes.get("start"), nodes.get("end"), new ArrayList<>(), false);
+        List<String> p2 = new ArrayList<>(paths);
+
+//        p1.removeAll(p2);
+        System.out.println(paths.size());
+
     }
 
     public static void part1(Node currentNode, Node destination, List<Node> path) {
         if (!path.isEmpty() && path.get(path.size() - 1).equals(destination) && !paths.contains(path.toString())) {
-            uniquePaths++;
             paths.add(path.toString());
             return;
         }
@@ -30,31 +39,24 @@ public class Day12 {
         }
     }
 
-    static Map<Node, Integer> visited = new HashMap<>();
 
-    public static void part2(Node currentNode, Node destination, List<Node> path) {
-        if (!path.isEmpty() && path.get(path.size() - 1).equals(destination) && !paths.contains(path.toString())) {
-            uniquePaths++;
+    public static void part2(Node currentNode, Node destination, List<Node> path, boolean doubleAdded) {
+        if (currentNode.label.toLowerCase().equals(currentNode.label) && path.contains(currentNode)) {
+            doubleAdded = true;
+        }
+        path.add(currentNode);
+
+        if (path.get(path.size() - 1).equals(destination) && !paths.contains(path.toString())) {
             paths.add(path.toString());
             return;
         }
-        if (currentNode.label.toLowerCase().equals(currentNode.label)
-                && !currentNode.label.equals("start") && !currentNode.label.equals("end")) {
-            visited.putIfAbsent(currentNode, 1);
-
-            if (visited.get(currentNode) != 2) {
-                path.add(currentNode);
-                visited.put(currentNode, 2);
-            }
-        } else {
-            path.add(currentNode);
-        }
 
         for (Node adjacentNode : currentNode.adjacentNodes) {
-            if (!(adjacentNode.label.toLowerCase().equals(adjacentNode.label) && !path.get(path.size() - 1).equals(destination) && path.contains(adjacentNode))
-                    || ((adjacentNode.label.equals("start") || adjacentNode.label.equals("end")) && !path.contains(adjacentNode))) {
-                part2(adjacentNode, destination, new ArrayList<>(path));
-            }
+            if (adjacentNode.label.equals("start")) continue;
+            if (adjacentNode.label.toLowerCase().equals(adjacentNode.label) && path.contains(adjacentNode) && doubleAdded)
+                continue;
+
+            part2(adjacentNode, destination, new ArrayList<>(path), doubleAdded);
         }
     }
 
