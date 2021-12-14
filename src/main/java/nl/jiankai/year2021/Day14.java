@@ -42,7 +42,7 @@ public class Day14 {
     }
 
     static void part2() {
-        Map<String, Long> pairOccurrences = generatePairPermutations();
+        Map<String, Long> pairOccurrences = new HashMap<>();
         String template = input.get(0);
         for (int i = 0; i < template.length() - 1; i++) {
             String key = Character.toString(template.charAt(i)) + template.charAt(i + 1);
@@ -102,18 +102,6 @@ public class Day14 {
         }
 
         return characterCounts;
-    }
-
-    static Map<String, Long> generatePairPermutations() {
-        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        Map<String, Long> permutations = new HashMap<>();
-        for (int i = 0; i < alphabet.length(); i++) {
-            for (int j = 0; j < alphabet.length(); j++) {
-                permutations.put(Character.toString(alphabet.charAt(i)) + alphabet.charAt(j), 0L);
-            }
-        }
-
-        return permutations;
     }
 
     private static Map<Character, Long> countOccurrences(String finalTemplate) {
