@@ -1,7 +1,9 @@
 package nl.jiankai.year2021;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.PriorityQueue;
 
 public class Day15 {
     public static void main(String[] args) {
@@ -24,13 +26,13 @@ public class Day15 {
 
     private static void part1() {
         grid[0][0] = 0;
-        findCheapestPath(grid);
+        System.out.println(shortestPath(grid, grid.length, grid[0].length));
     }
 
     private static void part2() {
-        int[][] local = createEnlargedGrid();
-        local[0][0] = 0;
-        findCheapestPath(local);
+        grid = createEnlargedGrid();
+        grid[0][0] = 0;
+        System.out.println(shortestPath(grid, grid.length, grid[0].length));
     }
 
     private static int[][] createEnlargedGrid() {
@@ -39,9 +41,7 @@ public class Day15 {
         int[][] enlargedGrid = new int[m * 5][n * 5];
 
         for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[i].length; j++) {
-                enlargedGrid[i][j] = grid[i][j];
-            }
+            System.arraycopy(grid[i], 0, enlargedGrid[i], 0, grid[i].length);
         }
         for (int i = 0; i < enlargedGrid.length; i++) {
             for (int j = n; j < enlargedGrid[i].length; j++) {
@@ -65,28 +65,79 @@ public class Day15 {
         return enlargedGrid;
     }
 
-    private static void findCheapestPath(int[][] grid) {
-        int m = grid.length;
-        int n = grid[0].length;
+    static class Cell {
+        int x;
+        int y;
+        int distance;
 
-        int[][] dp = new int[m][n];
-        dp[0][0] = grid[0][0];
-
-        for (int i = 1; i < m; i++) {
-            dp[i][0] = grid[i][0] + dp[i - 1][0];
+        Cell(int x, int y, int distance) {
+            this.x = x;
+            this.y = y;
+            this.distance = distance;
         }
 
-        for (int i = 1; i < n; i++) {
-            dp[0][i] = grid[0][i] + dp[0][i - 1];
-        }
+    }
 
-        for (int i = 1; i < m; i++) {
-            for (int j = 1; j < n; j++) {
-                dp[i][j] = grid[i][j] + Math.min(dp[i - 1][j], dp[i][j - 1]);
+    static class distanceComparator
+            implements Comparator<Cell> {
+
+        public int compare(Cell a, Cell b) {
+            return Integer.compare(a.distance, b.distance);
+        }
+    }
+
+    static boolean isInsideGrid(int i, int j) {
+        return (i >= 0 && i < grid.length &&
+                j >= 0 && j < grid[i].length);
+    }
+
+    static int shortestPath(int[][] grid, int row,
+                            int col) {
+        int[][] dist = new int[row][col];
+
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                dist[i][j] = Integer.MAX_VALUE;
             }
         }
 
-        System.out.println(dp[m - 1][n - 1]);
+        dist[0][0] = grid[0][0];
+
+        PriorityQueue<Cell> pq = new PriorityQueue<>(
+                row * col, new distanceComparator());
+
+        pq.add(new Cell(0, 0, dist[0][0]));
+        while (!pq.isEmpty()) {
+            Cell curr = pq.poll();
+            for (int i = 0; i < 4; i++) {
+                int rows = curr.x + dx[i];
+                int cols = curr.y + dy[i];
+
+                if (isInsideGrid(rows, cols)) {
+                    if (dist[rows][cols] >
+                            dist[curr.x][curr.y] +
+                                    grid[rows][cols]) {
+
+                        // If Cell is already been reached once,
+                        // remove it from priority queue
+                        if (dist[rows][cols] != Integer.MAX_VALUE) {
+                            Cell adj = new Cell(rows, cols,
+                                    dist[rows][cols]);
+
+                            pq.remove(adj);
+                        }
+
+                        // Insert cell with updated distance
+                        dist[rows][cols] = dist[curr.x][curr.y] +
+                                grid[rows][cols];
+
+                        pq.add(new Cell(rows, cols,
+                                dist[rows][cols]));
+                    }
+                }
+            }
+        }
+        return dist[row - 1][col - 1];
     }
 
 
@@ -192,5 +243,6 @@ public class Day15 {
             "9529734972179199615231232651591988769887899696743322386222999813557814511366456767451396998925196619").split("\n"));
 
     static int[][] grid;
-    static int[][] enlargedGrid;
+    static int[] dx = {-1, 0, 1, 0};
+    static int[] dy = {0, 1, 0, -1};
 }
