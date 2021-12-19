@@ -1,9 +1,6 @@
 package nl.jiankai.year2021;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class Day17 {
@@ -28,7 +25,7 @@ public class Day17 {
                     maxY = Math.max(y, maxY);
                     if (dx > 0) {
                         dx -= 1;
-                    } else {
+                    } else if (dx < 0) {
                         dx += 1;
                     }
                     dy -= 1;
@@ -58,7 +55,7 @@ public class Day17 {
 
                     if (dx > 0) {
                         dx -= 1;
-                    } else if (dx < 0){
+                    } else if (dx < 0) {
                         dx += 1;
                     }
                     dy -= 1;
