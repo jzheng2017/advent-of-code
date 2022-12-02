@@ -2,6 +2,7 @@ package nl.jiankai.year2022;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class Day2 {
     public static void main(String args[]) {
@@ -10,98 +11,147 @@ public class Day2 {
     }
 
     private static void part1() {
-        int total = 0;
-
-        for (String line : input) {
-            total += determineScore(line);
-        }
-
-        System.out.println(total);
+        System.out.println(
+                input
+                        .stream()
+                        .mapToInt(line -> {
+                            String[] opponentAndMyMove = line.split(" ");
+                            Move opponentsMove = Move.getMove(Move.toMoveType(opponentAndMyMove[0].charAt(0)));
+                            Move myMove = Move.getMove(Move.toMoveType(opponentAndMyMove[1].charAt(0)));
+                            return myMove.computeScore(opponentsMove);
+                        })
+                        .sum());
     }
 
     private static void part2() {
-        int total = 0;
+        System.out.println(
+                input
+                        .stream()
+                        .mapToInt((line) -> {
+                            String[] opponentMoveAndStrategicMove = line.split(" ");
+                            Move opponentsMove = Move.getMove(Move.toMoveType(opponentMoveAndStrategicMove[0].charAt(0)));
+                            Move myMove = Move.getStrategicMove(opponentsMove, opponentMoveAndStrategicMove[1].charAt(0));
+                            return myMove.computeScore(opponentsMove);
+                        })
+                        .sum());
+    }
 
-        for (String line : input) {
-            total += determineScore2(line);
+    private interface Move {
+        enum MoveType {
+            ROCK, PAPER, SCISSOR
         }
 
-        System.out.println(total);
-    }
+        MoveType move();
 
-    private static int determineScore(String line) {
-        String[] rps = line.split(" ");
-        char opp = rps[0].charAt(0);
-        char me = toOpp(rps[1].charAt(0));
+        MoveType losesAgainst();
 
-        return computeScore(opp, me);
-    }
+        MoveType winsAgainst();
 
-    private static int determineScore2(String line) {
-        String[] rps = line.split(" ");
-        char opp = rps[0].charAt(0);
-        char scenario = rps[1].charAt(0);
-        char me = computeResponse(opp, scenario);
-
-        return computeScore(opp, me);
-    }
-
-    private static int computeScore(char opp, char me) {
-        if (opp == me) {
-            return 3 + rpsScore(me);
-        } else if ((opp == 'A' && me == 'C')
-                || (opp == 'B' && me == 'A')
-                || (opp == 'C' && me == 'B')) {
-            return rpsScore(me);
-        } else {
-            return 6 + rpsScore(me);
+        default boolean wins(Move move) {
+            return winsAgainst() == move.move();
         }
-    }
 
-    private static char toOpp(char me) {
-        return switch (me) {
-            case 'X' -> 'A';
-            case 'Y' -> 'B';
-            case 'Z' -> 'C';
-            default -> throw new IllegalStateException("Unexpected value: " + me);
-        };
-    }
+        default boolean draws(Move move) {
+            return move() == move.move();
+        }
 
-    private static char computeResponse(char opp, char scenario) {
-        return switch (scenario) {
-            case 'X' -> getLosingMove(opp);
-            case 'Y' -> opp;
-            case 'Z' -> getWinningMove(opp);
-            default -> throw new IllegalStateException("Unexpected value: " + scenario);
-        };
-    }
+        int score();
 
-    private static char getWinningMove(char opp) {
-        return switch (opp) {
-            case 'A' -> 'B';
-            case 'B' -> 'C';
-            case 'C' -> 'A';
+        static MoveType toMoveType(char move) {
+            return switch (move) {
+                case 'A', 'X' -> MoveType.ROCK;
+                case 'B', 'Y' -> MoveType.PAPER;
+                case 'C', 'Z' -> MoveType.SCISSOR;
+                default -> throw new IllegalArgumentException("Unexpected value: " + move);
+            };
+        }
 
-            default -> throw new IllegalStateException("Unexpected value: " + opp);
-        };
-    }
+        static Move getStrategicMove(Move opponentsMove, char strategicMove) {
+            return switch (strategicMove) {
+                case 'X' -> getMove(opponentsMove.winsAgainst());
+                case 'Y' -> getMove(opponentsMove.move());
+                case 'Z' -> getMove(opponentsMove.losesAgainst());
+                default -> throw new IllegalArgumentException("Unexpected value: " + strategicMove);
+            };
+        }
 
-    private static char getLosingMove(char opp) {
-        return switch (opp) {
-            case 'A' -> 'C';
-            case 'B' -> 'A';
-            case 'C' -> 'B';
-            default -> throw new IllegalStateException("Unexpected value: " + opp);
-        };
-    }
+        default int computeScore(Move opponentsMove) {
+            if (wins(opponentsMove)) {
+                return 6 + score();
+            } else if (draws(opponentsMove)) {
+                return 3 + score();
+            } else {
+                return score();
+            }
+        }
 
-    private static int rpsScore(char rps) {
-        return switch (rps) {
-            case 'A' -> 1;
-            case 'B' -> 2;
-            case 'C' -> 3;
-            default -> 0;
-        };
+        static Move getMove(MoveType move) {
+            return switch (move) {
+                case ROCK -> new Move() {
+                    @Override
+                    public MoveType move() {
+                        return move;
+                    }
+
+                    @Override
+                    public MoveType losesAgainst() {
+                        return MoveType.PAPER;
+                    }
+
+                    @Override
+                    public MoveType winsAgainst() {
+                        return MoveType.SCISSOR;
+                    }
+
+                    @Override
+                    public int score() {
+                        return 1;
+                    }
+                };
+                case PAPER -> new Move() {
+                    @Override
+                    public MoveType move() {
+                        return move;
+                    }
+
+                    @Override
+                    public MoveType losesAgainst() {
+                        return MoveType.SCISSOR;
+                    }
+
+                    @Override
+                    public MoveType winsAgainst() {
+                        return MoveType.ROCK;
+                    }
+
+                    @Override
+                    public int score() {
+                        return 2;
+                    }
+                };
+                case SCISSOR -> new Move() {
+                    @Override
+                    public MoveType move() {
+                        return move;
+                    }
+
+                    @Override
+                    public MoveType losesAgainst() {
+                        return MoveType.ROCK;
+                    }
+
+                    @Override
+                    public MoveType winsAgainst() {
+                        return MoveType.PAPER;
+                    }
+
+                    @Override
+                    public int score() {
+                        return 3;
+                    }
+                };
+            };
+        }
     }
 
     private static final List<String> input =
