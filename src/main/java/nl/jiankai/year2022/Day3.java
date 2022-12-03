@@ -15,9 +15,10 @@ public class Day3 {
         int sum = 0;
 
         for (String rucksack : input) {
-            Set<Character> right = new HashSet<>(rucksack.substring(rucksack.length() / 2).chars().mapToObj(c -> (char) c).toList());
-            for (char c : rucksack.substring(0, rucksack.length() / 2).toCharArray()) {
-                if (right.contains(c)) {
+            Set<Character> rightHalf = new HashSet<>(rucksack.substring(rucksack.length() / 2).chars().mapToObj(c -> (char) c).toList());
+            char[] leftHalf = rucksack.substring(0, rucksack.length() / 2).toCharArray();
+            for (char c : leftHalf) {
+                if (rightHalf.contains(c)) {
                     sum += Character.isLowerCase(c) ? c - 'a' + 1 : c - 'A' + 27;
                     break;
                 }
@@ -32,12 +33,12 @@ public class Day3 {
 
         for (int i = 0; i < input.size(); i += 3) {
             String line = input.get(i);
-            Set<Character> c1 = new HashSet<>(input.get(i + 1).chars().mapToObj(c -> (char) c).toList());
-            Set<Character> c2 = new HashSet<>(input.get(i + 2).chars().mapToObj(c -> (char) c).toList());
+            Set<Character> secondGroup = new HashSet<>(input.get(i + 1).chars().mapToObj(c -> (char) c).toList());
+            Set<Character> thirdGroup = new HashSet<>(input.get(i + 2).chars().mapToObj(c -> (char) c).toList());
 
             for (int j = 0; j < line.length(); j++) {
                 char c = line.charAt(j);
-                if (c1.contains(c) && c2.contains(c)) {
+                if (secondGroup.contains(c) && thirdGroup.contains(c)) {
                     sum += Character.isLowerCase(c) ? c - 'a' + 1 : c - 'A' + 27;
                     break;
                 }
