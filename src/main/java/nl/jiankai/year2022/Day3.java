@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Day3 {
     public static void main(String[] args) {
-//        part1();
+        part1();
         part2();
     }
 
@@ -17,12 +17,12 @@ public class Day3 {
             int middle = rucksack.length() / 2;
             for (int i = 0; i < middle; i++) {
                 char c = rucksack.charAt(i);
-                occ[c >= 97 ? c - 96 : c - 38] = true;
+                occ[Character.isLowerCase(c) ? c - 'a' + 1 : c - 'A' + 27] = true;
             }
 
             for (int i = middle; i < rucksack.length(); i++) {
                 char c = rucksack.charAt(i);
-                int index = c >= 97 ? c - 96 : c - 38;
+                int index = Character.isLowerCase(c) ? c - 'a' + 1 : c - 'A' + 27;
                 if (occ[index]) {
                     sum += index;
                     break;
@@ -41,13 +41,13 @@ public class Day3 {
             String line = input.get(i);
             for (int j = 0; j < line.length(); j++) {
                 char c = line.charAt(j);
-                occ[c >= 97 ? c - 96 : c - 38] = 1;
+                occ[Character.isLowerCase(c) ? c - 'a' + 1 : c - 'A' + 27] = 1;
             }
             line = input.get(i + 1);
 
             for (int j = 0; j < line.length(); j++) {
                 char c = line.charAt(j);
-                int index = c >= 97 ? c - 96 : c - 38;
+                int index = Character.isLowerCase(c) ? c - 'a' + 1 : c - 'A' + 27;
                 if (occ[index] == 1) {
                     occ[index] = Math.min(occ[index] + 1, 2);
                 }
@@ -58,7 +58,7 @@ public class Day3 {
 
             for (int j = 0; j < line.length(); j++) {
                 char c = line.charAt(j);
-                int index = c >= 97 ? c - 96 : c - 38;
+                int index = Character.isLowerCase(c) ? c - 'a' + 1 : c - 'A' + 27;
                 if (occ[index] == 2) {
                     sum+= index;
                      break;
@@ -69,12 +69,6 @@ public class Day3 {
         System.out.println(sum);
     }
 
-    private static List<String> input2 = Arrays.asList(("vJrwpWtwJgWrhcsFMMfFFhFp\n" +
-            "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL\n" +
-            "PmmdzqPrVvPwwTWBwg\n" +
-            "wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn\n" +
-            "ttgJtRGJQctTZtZT\n" +
-            "CrZsJsPPZsGzwwsLwLmpwMDw").split("\n"));
     private static List<String> input = Arrays.asList(("dtddvvhwttHJhwdhJPddhwJGppmGjgpQgTjQplQpTljwpg\n" +
             "BfzSzRSVVMVNRMDDNBSNSnfBmbrglGQbmNpQggFjpgpbQlQb\n" +
             "ZSBffLnVZdCCPJjhhL\n" +
