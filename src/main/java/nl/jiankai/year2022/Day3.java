@@ -1,7 +1,9 @@
 package nl.jiankai.year2022;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Day3 {
     public static void main(String[] args) {
@@ -13,18 +15,10 @@ public class Day3 {
         int sum = 0;
 
         for (String rucksack : input) {
-            boolean[] occ = new boolean['Z' + 1];
-            int middle = rucksack.length() / 2;
-            for (int i = 0; i < middle; i++) {
-                char c = rucksack.charAt(i);
-                occ[Character.isLowerCase(c) ? c - 'a' + 1 : c - 'A' + 27] = true;
-            }
-
-            for (int i = middle; i < rucksack.length(); i++) {
-                char c = rucksack.charAt(i);
-                int index = Character.isLowerCase(c) ? c - 'a' + 1 : c - 'A' + 27;
-                if (occ[index]) {
-                    sum += index;
+            Set<Character> right = new HashSet<>(rucksack.substring(rucksack.length() / 2).chars().mapToObj(c -> (char) c).toList());
+            for (char c : rucksack.substring(0, rucksack.length() / 2).toCharArray()) {
+                if (right.contains(c)) {
+                    sum += Character.isLowerCase(c) ? c - 'a' + 1 : c - 'A' + 27;
                     break;
                 }
             }
@@ -36,32 +30,16 @@ public class Day3 {
     private static void part2() {
         int sum = 0;
 
-        for (int i = 0; i < input.size(); i+= 3) {
-            int[] occ = new int['Z' + 1];
+        for (int i = 0; i < input.size(); i += 3) {
             String line = input.get(i);
-            for (int j = 0; j < line.length(); j++) {
-                char c = line.charAt(j);
-                occ[Character.isLowerCase(c) ? c - 'a' + 1 : c - 'A' + 27] = 1;
-            }
-            line = input.get(i + 1);
+            Set<Character> c1 = new HashSet<>(input.get(i + 1).chars().mapToObj(c -> (char) c).toList());
+            Set<Character> c2 = new HashSet<>(input.get(i + 2).chars().mapToObj(c -> (char) c).toList());
 
             for (int j = 0; j < line.length(); j++) {
                 char c = line.charAt(j);
-                int index = Character.isLowerCase(c) ? c - 'a' + 1 : c - 'A' + 27;
-                if (occ[index] == 1) {
-                    occ[index] = Math.min(occ[index] + 1, 2);
-                }
-            }
-
-
-            line = input.get(i + 2);
-
-            for (int j = 0; j < line.length(); j++) {
-                char c = line.charAt(j);
-                int index = Character.isLowerCase(c) ? c - 'a' + 1 : c - 'A' + 27;
-                if (occ[index] == 2) {
-                    sum+= index;
-                     break;
+                if (c1.contains(c) && c2.contains(c)) {
+                    sum += Character.isLowerCase(c) ? c - 'a' + 1 : c - 'A' + 27;
+                    break;
                 }
             }
         }
