@@ -1,9 +1,6 @@
 package nl.jiankai.year2022;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Day3 {
     public static void main(String[] args) {
