@@ -8,10 +8,10 @@ import java.util.stream.Collectors;
 
 public class Day9 {
     public static void main(String[] args) {
-        part1();
+        part2();
     }
 
-    private static void part1() {
+    private static void part2() {
         Set<String> visited = new HashSet<>();
         int[][] positions = new int[10][2];
 
