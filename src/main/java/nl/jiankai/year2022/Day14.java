@@ -7,6 +7,7 @@ import java.util.List;
 public class Day14 {
     public static void main(String[] args) {
         part1();
+        part2();
     }
 
     private static int minX = Integer.MAX_VALUE, maxX, minY = Integer.MAX_VALUE, maxY;
@@ -18,15 +19,25 @@ public class Day14 {
         try {
             for (int i = 0; i < 1000000; i++) {
                 dropSand(m);
-                if (i == 571) {
-                    System.out.println("sand: " + sand);
-                    print(m);
-                }
             }
         } catch (IndexOutOfBoundsException ex) {
             System.out.println(sand);
         }
 
+    }
+
+    static int lastX, lastY;
+
+    private static void part2() {
+        getMinMaxBoundaries2();
+        char[][] m = fillMap();
+        for (int i = 0; i < 1000000; i++) {
+            dropSand(m);
+            if (lastX == (500 - minX) && lastY == (0 - minY)) {
+                System.out.println(sand);
+                break;
+            }
+        }
     }
 
     private static void dropSand(char[][] m) {
@@ -45,6 +56,8 @@ public class Day14 {
         }
 
         sand++;
+        lastX = x;
+        lastY = y;
         m[y][x] = 'o';
     }
 
@@ -112,6 +125,15 @@ public class Day14 {
                 maxY = Math.max(maxY, y);
             }
         }
+
+    }
+
+    private static void getMinMaxBoundaries2() {
+        getMinMaxBoundaries();
+        minX -= 1000;
+        maxX += 1000;
+        maxY += 2;
+        input.add("%s,%s -> %s,%s".formatted(minX, maxY, maxX, maxY));
     }
 
     private static List<String> input = new ArrayList<>(Arrays.asList(("498,13 -> 498,17 -> 491,17 -> 491,21 -> 507,21 -> 507,17 -> 502,17 -> 502,13\n" +
