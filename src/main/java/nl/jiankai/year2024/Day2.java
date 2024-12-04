@@ -5,12 +5,11 @@ import java.util.*;
 public class Day2 {
 
     public static void main(String[] args) {
-//        day1();
-        day2();
+
     }
 
 
-    private static void day1() {
+    private static void part1() {
         String[] lines = input.split("\n");
         int ans = 0;
         for (String line : lines) {
@@ -23,7 +22,7 @@ public class Day2 {
         System.out.println(ans);
     }
 
-    private static void day2() {
+    private static void part2() {
         String[] lines = input.split("\n");
         int ans = 0;
         for (String line : lines) {

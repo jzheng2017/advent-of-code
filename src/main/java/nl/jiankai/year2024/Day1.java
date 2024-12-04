@@ -5,12 +5,11 @@ import java.util.*;
 public class Day1 {
 
     public static void main(String[] args) {
-//        day1();
-    day2();
+
     }
 
 
-    private static void day1() {
+    private static void part1() {
         String[] split = input.split("\n");
         List<Integer> left = new ArrayList<>();
         List<Integer> right = new ArrayList<>();
@@ -33,7 +32,7 @@ public class Day1 {
         System.out.println(ans);
     }
 
-    private static void day2() {
+    private static void part2() {
         String[] split = input.split("\n");
         Map<Integer, Integer> left = new HashMap<>();
         Map<Integer, Integer> right = new HashMap<>();

@@ -8,10 +8,11 @@ import java.util.regex.Pattern;
 public class Day3 {
 
     public static void main(String[] args) {
-        day2();
+        part1();
+        part2();
     }
 
-    private static void day1() {
+    private static void part1() {
         String regex = "mul\\((\\d+),(\\d+)\\)";
 
         Pattern pattern = Pattern.compile(regex);
@@ -33,7 +34,7 @@ public class Day3 {
         System.out.println(ans);
     }
 
-    private static void day2() {
+    private static void part2() {
         String regex = "mul\\((\\d+),(\\d+)\\)";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(input);

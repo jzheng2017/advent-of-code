@@ -3,7 +3,9 @@ package nl.jiankai.year2024;
 public class Day4 {
     public static void main(String[] args) {
         part1();
+        part2();
     }
+
 
     private static void part1() {
         int length = input.indexOf("\n");
@@ -17,59 +19,58 @@ public class Day4 {
                 char t = input.charAt(i + (length * 2));
                 char fo = input.charAt(i + (length * 3));
 
-                if (f == 'X' && s == 'M' && t == 'A' && fo == 'S') {
-                    System.out.println(STR."\{f}\{s}\{t}\{fo}");
-                    System.out.println(i);
-                    ans++;
-                } else if (f == 'S' && s == 'A' && t == 'M' && fo == 'X') {
-                    System.out.println(STR."\{f}\{s}\{t}\{fo}");
-                    System.out.println(i);
+                if (f == 'X' && s == 'M' && t == 'A' && fo == 'S' || f == 'S' && s == 'A' && t == 'M' && fo == 'X') {
                     ans++;
                 }
 
-                if (i + 3 < length*((i/length)+1)) {
-                    char ds = input.charAt(i + length+1);
-                    char dt = input.charAt((i + (length * 2))+2);
-                    char dfo = input.charAt((i + (length * 3))+3);
-                    if (f == 'X' && ds == 'M' && dt == 'A' && dfo == 'S') {
-                        System.out.println(STR."\{f}\{ds}\{dt}\{dfo}");
-                        System.out.println(i);
-                        ans++;
-                    } else if (f == 'S' && ds == 'A' && dt == 'M' && dfo == 'X') {
-                        System.out.println(STR."\{f}\{ds}\{dt}\{dfo}");
-                        System.out.println(i);
+                if (i + 3 < length * ((i / length) + 1)) {
+                    char ds = input.charAt(i + length + 1);
+                    char dt = input.charAt((i + (length * 2)) + 2);
+                    char dfo = input.charAt((i + (length * 3)) + 3);
+                    if (f == 'X' && ds == 'M' && dt == 'A' && dfo == 'S' || f == 'S' && ds == 'A' && dt == 'M' && dfo == 'X') {
                         ans++;
                     }
                 }
 
-                if (i - 3 >= length*(i/length)) {
-                    char ds = input.charAt(i + length-1);
-                    char dt = input.charAt((i + (length * 2))-2);
-                    char dfo = input.charAt((i + (length * 3))-3);
-                    if (f == 'X' && ds == 'M' && dt == 'A' && dfo == 'S') {
-                        System.out.println(STR."\{f}\{ds}\{dt}\{dfo}");
-                        System.out.println(i);
-                        ans++;
-                    } else if (f == 'S' && ds == 'A' && dt == 'M' && dfo == 'X') {
-                        System.out.println(STR."\{f}\{ds}\{dt}\{dfo}");
-                        System.out.println(i);
+                if (i - 3 >= length * (i / length)) {
+                    char ds = input.charAt(i + length - 1);
+                    char dt = input.charAt((i + (length * 2)) - 2);
+                    char dfo = input.charAt((i + (length * 3)) - 3);
+                    if (f == 'X' && ds == 'M' && dt == 'A' && dfo == 'S' || f == 'S' && ds == 'A' && dt == 'M' && dfo == 'X') {
                         ans++;
                     }
                 }
             }
 
-            if (i + 3 < length*((i/length)+1)) {
+            if (i + 3 < length * ((i / length) + 1)) {
                 char s = input.charAt(i + 1);
                 char t = input.charAt(i + 2);
                 char fo = input.charAt(i + 3);
 
-                if (f == 'X' && s == 'M' && t == 'A' && fo == 'S') {
-                    System.out.println(STR."\{f}\{s}\{t}\{fo}");
-                    System.out.println(i);
+                if (f == 'X' && s == 'M' && t == 'A' && fo == 'S' || f == 'S' && s == 'A' && t == 'M' && fo == 'X') {
                     ans++;
-                } else if (f == 'S' && s == 'A' && t == 'M' && fo == 'X') {
-                    System.out.println(STR."\{f}\{s}\{t}\{fo}");
-                    System.out.println(i);
+                }
+            }
+        }
+
+        System.out.println(ans);
+    }
+
+    private static void part2() {
+        int length = input.indexOf("\n");
+        input = input.replace("\n", "");
+        int height = input.length();
+        int ans = 0;
+        for (int i = 0; i < height; i++) {
+            char f = input.charAt(i);
+            if (i + length < height && i - length >= 0 && i + 1 < length * ((i / length)+1) && i - 1 >= length * (i / length)) {
+                System.out.println(i);
+                char tl = input.charAt(i - length - 1);
+                char tr = input.charAt(i - length + 1);
+                char bl = input.charAt(i + length - 1);
+                char br = input.charAt(i + length + 1);
+
+                if (f == 'A' && (((tl == 'M' && br == 'S') || (tl =='S' && br == 'M')) && ((tr == 'M' && bl == 'S') || (tr =='S' && bl == 'M')))) {
                     ans++;
                 }
             }
