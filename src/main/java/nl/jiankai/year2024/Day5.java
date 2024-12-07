@@ -2,7 +2,7 @@ package nl.ohra.website;
 
 import java.util.*;
 
-public class Main {
+public class Day5 {
     public static void main(String[] args) {
         part2();
     }

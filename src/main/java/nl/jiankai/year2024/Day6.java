@@ -3,7 +3,7 @@ package nl.jiankai.year2024;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Main {
+public class Day6 {
     public static void main(String[] args) {
         part2();
     }
