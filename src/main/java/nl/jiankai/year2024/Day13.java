@@ -1,12 +1,12 @@
 package nl.jiankai.year2024;
 
 
-import org.apache.commons.math3.linear.*;
+//import org.apache.commons.math3.linear.*;
 
 import java.math.BigDecimal;
 import java.util.*;
 
-public class Main {
+public class Day13 {
     public static void main(String[] args) {
         part2();
     }
@@ -119,18 +119,18 @@ public class Main {
 
         double[] constants = {px, py};
 
-        RealMatrix matrix = new Array2DRowRealMatrix(coefficients, false);
-        RealVector vector = new ArrayRealVector(constants, false);
-
-        DecompositionSolver solver = new LUDecomposition(matrix).getSolver();
-        RealVector solution = solver.solve(vector);
-        var n = solution.getEntry(0);
-        var m = solution.getEntry(1);
-
-        if (Math.abs(n - Math.round(n)) < 1e-4d && Math.abs(m - Math.round(m)) < 1e-4d  // integer solution!
-                && Math.round(n) <= 10000000000000L && Math.round(m) <= 10000000000000L) {
-            return Math.round(n) * 3 + Math.round(m);
-        }
+//        RealMatrix matrix = new Array2DRowRealMatrix(coefficients, false);
+//        RealVector vector = new ArrayRealVector(constants, false);
+//
+//        DecompositionSolver solver = new LUDecomposition(matrix).getSolver();
+//        RealVector solution = solver.solve(vector);
+//        var n = solution.getEntry(0);
+//        var m = solution.getEntry(1);
+//
+//        if (Math.abs(n - Math.round(n)) < 1e-4d && Math.abs(m - Math.round(m)) < 1e-4d  // integer solution!
+//                && Math.round(n) <= 10000000000000L && Math.round(m) <= 10000000000000L) {
+//            return Math.round(n) * 3 + Math.round(m);
+//        }
 
         return Long.MAX_VALUE;
     }
